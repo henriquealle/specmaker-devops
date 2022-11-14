@@ -2,13 +2,17 @@ package br.com.specmaker.word;
 
 import br.com.specmaker.entity.Query;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.util.Units;
 import org.apache.poi.xwpf.usermodel.*;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 
 
 @Component
@@ -30,7 +34,7 @@ public class WordDocCreator {
                 String index = (devopsQuery.getWorkItems().indexOf( p ) + 1) + ". ";
                 String titulo = index.concat( p.getTitulo() );
                 adicionarParagrafo(documento, titulo, true, 14);
-                adicionarParagrafo(documento, p.getDetalhes(), false, 12);
+                adicionarParagrafo(documento, tratarDetalhesWorkItem( p.getDetalhes() ), false, 12);
             });
 
 
@@ -66,12 +70,14 @@ public class WordDocCreator {
 
     private void adicionarImagem(final XWPFDocument documento, final String imagem) throws IOException, URISyntaxException, InvalidFormatException {
         XWPFParagraph paragrafoComImagem = documento.createParagraph();
-        paragrafoComImagem.setAlignment(ParagraphAlignment.CENTER);
+        paragrafoComImagem.setAlignment(ParagraphAlignment.LEFT);
         XWPFRun imagemRun = paragrafoComImagem.createRun();
         imagemRun.setTextPosition(20);
-        /*var imagemPath = Paths.get(ClassLoader.getSystemResource(imagem).toURI());
+
+        var imagemPath = Paths.get(ClassLoader.getSystemResource(imagem).toURI());
+
         imagemRun.addPicture(Files.newInputStream(imagemPath), Document.PICTURE_TYPE_PNG,
-                imagemPath.getFileName().toString(), Units.toEMU(50), Units.toEMU(50));*/
+                imagemPath.getFileName().toString(), Units.toEMU(50), Units.toEMU(50));
 
     }
 
@@ -85,17 +91,6 @@ public class WordDocCreator {
         secaoRun.setText(conteudo);
     }
 
-    private void adicionarSaudacao(final XWPFDocument documento, final String saudacao) {
-
-        XWPFParagraph paragrafoSecao = documento.createParagraph();
-        XWPFRun secaoRun = paragrafoSecao.createRun();
-        secaoRun.setText(saudacao);
-        secaoRun.setColor("00CC44");
-        secaoRun.setBold(true);
-        secaoRun.setFontFamily(FONT_CALIBRI);
-    }
-
-
     private void addCabecalhoDocumento(final XWPFDocument documento) {
 
         var tabela = documento.createTable();
@@ -107,11 +102,10 @@ public class WordDocCreator {
 
         linha = tabela.createRow();
         linha.getCell(0).setText("Data da solicitação");
-        //TODO refatorar para obter de uma classe utils a parte
-        linha.getCell(1).setText(LocalDateTime.now().format( DateTimeFormatter.ofPattern("dd/MM/uuuu") ));
+        linha.getCell(1).setText(
+                LocalDateTime.now().format( DateTimeFormatter.ofPattern("dd/MM/uuuu") ) );
         linha.getCell(2).setText("Pedido (uso do Sesc)");
         linha.getCell(3).setText("");
-
 
         linha = tabela.createRow();
         linha.getCell(0).setText("Gerência / Unidade Solicitante");
@@ -119,6 +113,15 @@ public class WordDocCreator {
         linha.getCell(2).setText("Contato");
         linha.getCell(3).setText("");
 
+    }
+
+    private String tratarDetalhesWorkItem(String descricao){
+        String str = !Objects.isNull(descricao) ? descricao.replaceAll("<.*?>", "") : "";
+        str = str.replaceAll("&"+"nbsp;", " ");
+        str = str.replaceAll(String.valueOf((char) 160), " ");
+        str = str.replace("\u00a0","");
+
+        return str;
     }
 
 }
