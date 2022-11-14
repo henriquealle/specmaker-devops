@@ -1,18 +1,14 @@
 package br.com.specmaker.word;
 
 import br.com.specmaker.entity.Query;
-import br.com.specmaker.entity.WorkItem;
 import org.springframework.stereotype.Component;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.net.URISyntaxException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.util.Units;
 import org.apache.poi.xwpf.usermodel.*;
 
 
@@ -21,10 +17,10 @@ public class WordDocCreator {
 
     private static final String FONT_CALIBRI = "Calibri";
 
-    public void gerarArquivo(final Query devopsQuery)
+    public XWPFDocument gerarArquivoEspecificacao(final Query devopsQuery)
             throws IOException, URISyntaxException, InvalidFormatException {
 
-        try (var documento = new XWPFDocument()) {
+            var documento = new XWPFDocument();
             adicionarTitulo(documento, devopsQuery.getNome());
             addCabecalhoDocumento(documento);
             //adicionarSubTitulo(documento, dados.getSubTitulo());
@@ -32,15 +28,19 @@ public class WordDocCreator {
             adicionarParagrafo(documento, " ", false, 16);
 
             devopsQuery.getWorkItems().forEach(p -> {
-                adicionarParagrafo(documento, p.getTitulo(), true, 16);
+                String index = (devopsQuery.getWorkItems().indexOf( p ) + 1) + ". ";
+                String titulo = index.concat( p.getTitulo() );
+                adicionarParagrafo(documento, titulo, true, 14);
                 adicionarParagrafo(documento, p.getDetalhes(), false, 12);
             });
 
 
-            try (var out = new FileOutputStream( devopsQuery.getNome().concat(".docx") ) ) {
+            /*try (var out = new FileOutputStream( devopsQuery.getNome().concat(".docx") ) ) {
                 documento.write(out);
-            }
-        }
+            }*/
+
+            return documento;
+
     }
 
     private void adicionarTitulo(final XWPFDocument documento, final String titulo) {

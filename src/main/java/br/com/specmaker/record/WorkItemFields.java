@@ -1,9 +1,7 @@
 package br.com.specmaker.record;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public record WorkItemFields(
@@ -12,7 +10,10 @@ public record WorkItemFields(
         @JsonProperty("System.WorkItemType")
         String workItemType,
         @JsonProperty("Microsoft.VSTS.TCM.ReproSteps")
-        String descricao,
+        String reproSteps,
+
+        @JsonProperty("System.Description")
+        String description,
 
         @JsonProperty("System.CreatedBy")
         String abertoPor,
