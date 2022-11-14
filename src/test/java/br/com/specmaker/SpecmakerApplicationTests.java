@@ -1,10 +1,10 @@
-package br.com.specmaker.specmaker;
+package br.com.specmaker;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class SpecMakerApplicationTests {
+class SpecmakerApplicationTests {
 
 	@Test
 	void contextLoads() {
