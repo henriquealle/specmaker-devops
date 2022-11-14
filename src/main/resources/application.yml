@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost/specmaker
+    username: root
+    password: root
+
+azure:
+  api:
+    token: 65v5jlkespalla3bke3jixpt45vnkqmj6ryci5i7rl2v5iaib44q
