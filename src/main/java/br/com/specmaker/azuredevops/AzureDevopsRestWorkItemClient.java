@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 import java.time.Duration;
@@ -22,7 +21,7 @@ public class AzureDevopsRestWorkItemClient {
 
     private static final String GET_WORK_ITEM_BY_QUERY_ID = "/_apis/wit/wiql/{queryId}";
     private static final String GET_WORK_ITEM_BY_WIT_ID = "/_apis/wit/workitems/{id}";
-    private static final String GET_WORK_ITEM_IMG_BY_WIT_ID = "/_apis/wit/attachments/{id}";
+    private static final String GET_WORK_ITEM_IMG_BY_ID = "/_apis/wit/attachments/{id}";
 
     @Value("${azure.api.apiVersion}")
     private String azureDevopsApiVersion;
@@ -56,33 +55,22 @@ public class AzureDevopsRestWorkItemClient {
                 .block(REQUEST_TIMEOUT);
     }
 
-    public Mono<Byte[]> retrieveImageFromWorkItemById(final Long workItemId)
+    public byte[] retrieveImageFromWorkItemById(final String imageId)
             throws ExecutionException, InterruptedException, IOException {
 
-        return localApiClient
+        byte[] response  = localApiClient
                 .get()
                 .uri(uriBuilder -> uriBuilder
-                        .path(GET_WORK_ITEM_IMG_BY_WIT_ID)
+                        .path(GET_WORK_ITEM_IMG_BY_ID)
                         .queryParam("fileName", "image.png")
-                        .build(workItemId))
+                        .build(imageId))
                 .accept(MediaType.IMAGE_PNG)
                 .retrieve()
-                .bodyToMono(Byte[].class);
+                .bodyToMono(byte[].class)
+                .block();
 
+
+        return response;
     }
 
-   /* public Mono<byte[]> retrieveImageFromWorkItemById(final Long workItemId)
-            throws ExecutionException, InterruptedException, IOException {
-
-        Mono<byte[]> image = localApiClient
-                .get()
-                .uri(uriBuilder -> uriBuilder
-                        .path(GET_WORK_ITEM_IMG_BY_WIT_ID)
-                        .queryParam("fileName", "image.png")
-                        .build(workItemId))
-                .retrieve()
-                .bodyToMono();
-
-        return image;
-    }*/
 }

@@ -1,24 +1,29 @@
 package br.com.specmaker.word;
 
+import br.com.specmaker.azuredevops.AzureDevopsRestWorkItemClient;
 import br.com.specmaker.entity.Query;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.util.Units;
 import org.apache.poi.xwpf.usermodel.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
+import java.util.concurrent.ExecutionException;
 
 
 @Component
 public class WordDocCreator {
 
     private static final String FONT_CALIBRI = "Calibri";
+
+    @Autowired
+    private AzureDevopsRestWorkItemClient witRestClient;
 
     public XWPFDocument gerarArquivoEspecificacao(final Query devopsQuery)
             throws IOException, URISyntaxException, InvalidFormatException {
@@ -35,6 +40,20 @@ public class WordDocCreator {
                 String titulo = index.concat( p.getTitulo() );
                 adicionarParagrafo(documento, titulo, true, 14);
                 adicionarParagrafo(documento, tratarDetalhesWorkItem( p.getDetalhes() ), false, 12);
+
+                try {
+                    adicionarImagem(documento, getWitImageBy("") );
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                } catch (URISyntaxException e) {
+                    throw new RuntimeException(e);
+                } catch (InvalidFormatException e) {
+                    throw new RuntimeException(e);
+                } catch (ExecutionException e) {
+                    throw new RuntimeException(e);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
             });
 
 
@@ -56,28 +75,17 @@ public class WordDocCreator {
         tituloRun.setFontSize(20);
     }
 
-    private void adicionarSubTitulo(final XWPFDocument documento, final String subtitulo) {
-        XWPFParagraph paragrafoSubTitulo = documento.createParagraph();
-        paragrafoSubTitulo.setAlignment(ParagraphAlignment.CENTER);
-        XWPFRun subtituloRun = paragrafoSubTitulo.createRun();
-        subtituloRun.setText(subtitulo);
-        subtituloRun.setColor("00CC44"); // Verde
-        subtituloRun.setFontFamily(FONT_CALIBRI);
-        subtituloRun.setFontSize(16);
-        subtituloRun.setTextPosition(20);
-        subtituloRun.setUnderline(UnderlinePatterns.DOT_DOT_DASH);
-    }
+    private void adicionarImagem(final XWPFDocument documento, final ByteArrayInputStream imagemStream)
+            throws IOException, URISyntaxException, InvalidFormatException {
 
-    private void adicionarImagem(final XWPFDocument documento, final String imagem) throws IOException, URISyntaxException, InvalidFormatException {
         XWPFParagraph paragrafoComImagem = documento.createParagraph();
         paragrafoComImagem.setAlignment(ParagraphAlignment.LEFT);
+
         XWPFRun imagemRun = paragrafoComImagem.createRun();
         imagemRun.setTextPosition(20);
 
-        var imagemPath = Paths.get(ClassLoader.getSystemResource(imagem).toURI());
-
-        imagemRun.addPicture(Files.newInputStream(imagemPath), Document.PICTURE_TYPE_PNG,
-                imagemPath.getFileName().toString(), Units.toEMU(50), Units.toEMU(50));
+        imagemRun.addPicture(imagemStream, Document.PICTURE_TYPE_PNG,
+                "", Units.toEMU(400), Units.toEMU(200));
 
     }
 
@@ -124,4 +132,12 @@ public class WordDocCreator {
         return str;
     }
 
+    private ByteArrayInputStream getWitImageBy(String imageId)
+            throws IOException, ExecutionException, InterruptedException {
+        byte[] witImg = witRestClient.retrieveImageFromWorkItemById(
+                "950f0c34-5dca-4a2a-82b0-6135b43afbc7");
+
+        ByteArrayInputStream imageStream = new ByteArrayInputStream(witImg);
+        return imageStream;
+    }
 }
