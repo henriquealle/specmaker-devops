@@ -1,6 +1,7 @@
 package br.com.specmaker.azuredevops;
 
-import br.com.specmaker.record.QueryRecord;
+import br.com.specmaker.record.QueryWorkItemRecord;
+import br.com.specmaker.record.WorkItemRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -15,7 +16,8 @@ public class AzureDevopsRestWorkItemClient {
 
     private static final Duration REQUEST_TIMEOUT = Duration.ofSeconds(10);
 
-    private static final String GET_QUERY_BY_ID = "/_apis/wit/queries/{id}";
+    private static final String GET_WORK_ITEM_BY_QUERY_ID = "/_apis/wit/wiql/{queryId}";
+    private static final String GET_WORK_ITEM_BY_ID = "/_apis/wit/workitems/{id}";
 
     @Value("${azure.api.apiVersion}")
     private String azureDevopsApiVersion;
@@ -25,16 +27,27 @@ public class AzureDevopsRestWorkItemClient {
         this.localApiClient = localApiClient;
     }
 
-    public QueryRecord getQueryById(String id){
+    public QueryWorkItemRecord listWorkItemByQueryId(String queryId){
         return localApiClient
                 .get()
                 .uri(uriBuilder -> uriBuilder
-                        .path(GET_QUERY_BY_ID)
+                        .path(GET_WORK_ITEM_BY_QUERY_ID)
                         .queryParam("api-version", azureDevopsApiVersion)
-                        .queryParam("$depth", 2)
-                        .build(id))
+                        .build(queryId))
                 .retrieve()
-                .bodyToMono(QueryRecord.class)
+                .bodyToMono(QueryWorkItemRecord.class)
+                .block(REQUEST_TIMEOUT);
+    }
+
+    public WorkItemRecord getWorkItemById(Long workItemId){
+        return localApiClient
+                .get()
+                .uri(uriBuilder -> uriBuilder
+                        .path(GET_WORK_ITEM_BY_ID)
+                        .queryParam("api-version", azureDevopsApiVersion)
+                        .build(workItemId))
+                .retrieve()
+                .bodyToMono(WorkItemRecord.class)
                 .block(REQUEST_TIMEOUT);
     }
 }
