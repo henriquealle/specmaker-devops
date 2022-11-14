@@ -17,7 +17,6 @@ public class Query {
     private String path;
     private boolean isFolder;
     private boolean hasChildren;
-    private List<Query> children;
     private List<WorkItem> workItems;
 
 }

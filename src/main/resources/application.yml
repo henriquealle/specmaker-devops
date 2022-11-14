@@ -7,3 +7,7 @@ spring:
 azure:
   api:
     token: 65v5jlkespalla3bke3jixpt45vnkqmj6ryci5i7rl2v5iaib44q
+    mainFolderId: 5e33dde2-8b60-41be-9e3f-e33845fe3c8c
+    repositorio: PortalCredenciado
+    baseUrl: https://dev.azure.com/sescsp-gti
+    apiVersion: api-version=7.1-preview.2
