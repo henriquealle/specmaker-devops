@@ -1,6 +1,7 @@
 package br.com.specmaker.controller;
 
 import br.com.specmaker.entity.Query;
+import br.com.specmaker.record.QueryRecord;
 import br.com.specmaker.service.QueryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,7 +28,7 @@ public class QueryController {
     }
 
     @GetMapping("/{id}")
-    public String getMainQueryFolder(@PathVariable(value = "id", required = true) String id){
+    public Query getQueryByID(@PathVariable(value = "id", required = true) String id){
         return service.getQueryByID(id);
     }
 }
