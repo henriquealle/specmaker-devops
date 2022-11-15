@@ -31,10 +31,10 @@ public class EspecificacaoWordCreator {
             var documento = new XWPFDocument();
             adicionarTitulo(documento, devopsQuery.getNome());
             addCabecalhoDocumento(documento);
-            //adicionarSubTitulo(documento, dados.getSubTitulo());
-
             adicionarParagrafo(documento, " ", false, 16);
+            adicionarTopicosIniciais(documento);
 
+            /* adicionando os workitens e seu detalhamento no documento*/
             devopsQuery.getWorkItems().forEach(workItem -> {
                 String index = (devopsQuery.getWorkItems().indexOf( workItem ) + 1) + ". ";
                 String titulo = index.concat( workItem.getTitulo() );
@@ -59,13 +59,7 @@ public class EspecificacaoWordCreator {
 
             });
 
-
-            /*try (var out = new FileOutputStream( devopsQuery.getNome().concat(".docx") ) ) {
-                documento.write(out);
-            }*/
-
             return documento;
-
     }
 
     private void adicionarTitulo(final XWPFDocument documento, final String titulo) {
@@ -76,6 +70,16 @@ public class EspecificacaoWordCreator {
         tituloRun.setBold(true);
         tituloRun.setFontFamily(FONT_CALIBRI);
         tituloRun.setFontSize(20);
+    }
+
+    private void adicionarTopicosIniciais(final XWPFDocument documento) {
+        adicionarParagrafo(documento, EspecificacaoTextosFixosHelper.TOPICO_OBJETIVO, true, 16);
+        adicionarParagrafo(documento, EspecificacaoTextosFixosHelper.CONTEUDO_OBJETIVO, false, 12);
+        adicionarParagrafo(documento, EspecificacaoTextosFixosHelper.TOPICO_JUSTIFICATIVA, true, 16);
+        adicionarParagrafo(documento, EspecificacaoTextosFixosHelper.CONTEUDO_JUSTIFICATIVA, false, 12);
+        adicionarParagrafo(documento, EspecificacaoTextosFixosHelper.TOPICO_ESCOPO, true, 16);
+        adicionarParagrafo(documento, EspecificacaoTextosFixosHelper.CONTEUDO_ESCOPO, false, 12);
+        adicionarParagrafo(documento, EspecificacaoTextosFixosHelper.TOPICO_DETALHAMENTO, true, 16);
     }
 
     private void adicionarImagem(final XWPFDocument documento, final ByteArrayInputStream imagemStream)
