@@ -8,6 +8,10 @@ import br.com.specmaker.record.WorkItemRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -61,13 +65,44 @@ public class WorkItemService {
             throws IOException, ExecutionException, InterruptedException {
 
         byte[] imagem = azureDevopsRestWorkItemClient.getImageByUrl(imageUrl);
-        //ImageInputStream iis = ImageIO.createImageInputStream(new ByteArrayInputStream(imagem));
+        BufferedImage bff = ImageIO.read( new ByteArrayInputStream(imagem) );
+
+        Dimension originalDimension = new Dimension(bff.getWidth(), bff.getHeight());
+        Dimension boundary = new Dimension(450, 300);
+        Dimension newDimension = getScaledDimension(originalDimension, boundary);
 
         WorkItemImage workItemImage = new WorkItemImage();
         workItemImage.setImgFile(imagem);
-        workItemImage.setWidth(400);
-        workItemImage.setHeight(250);
-        workItemImage.setFileName("");
+        workItemImage.setWidth( (int) newDimension.getWidth() );
+        workItemImage.setHeight((int) newDimension.getHeight() );
         return workItemImage;
+    }
+
+    private Dimension getScaledDimension(Dimension imgSize, Dimension boundary) {
+
+        int original_width = imgSize.width;
+        int original_height = imgSize.height;
+        int bound_width = boundary.width;
+        int bound_height = boundary.height;
+        int new_width = original_width;
+        int new_height = original_height;
+
+        // first check if we need to scale width
+        if (original_width > bound_width) {
+            //scale width to fit
+            new_width = bound_width;
+            //scale height to maintain aspect ratio
+            new_height = (new_width * original_height) / original_width;
+        }
+
+        // then check if we need to scale even with the new height
+        if (new_height > bound_height) {
+            //scale height to fit instead
+            new_height = bound_height;
+            //scale width to maintain aspect ratio
+            new_width = (new_height * original_width) / original_height;
+        }
+
+        return new Dimension(new_width, new_height);
     }
 }

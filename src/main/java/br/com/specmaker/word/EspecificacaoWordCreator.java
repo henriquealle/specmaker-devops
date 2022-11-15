@@ -15,7 +15,6 @@ import java.net.URISyntaxException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
-import java.util.concurrent.ExecutionException;
 
 
 @Component
@@ -136,11 +135,4 @@ public class EspecificacaoWordCreator {
         return str;
     }
 
-    private ByteArrayInputStream getWitImageBy(String imageUrl)
-            throws IOException, ExecutionException, InterruptedException {
-        byte[] witImg = witRestClient.getImageByUrl(imageUrl);
-
-        ByteArrayInputStream imageStream = new ByteArrayInputStream(witImg);
-        return imageStream;
-    }
 }
