@@ -16,12 +16,9 @@ import java.util.concurrent.ExecutionException;
 public class AzureDevopsRestWorkItemClient {
 
     private final WebClient devopsRestApiClient;
-
     private static final Duration REQUEST_TIMEOUT = Duration.ofSeconds(10);
-
     private static final String GET_WORK_ITEM_BY_QUERY_ID = "/_apis/wit/wiql/{queryId}";
     private static final String GET_WORK_ITEM_BY_WIT_ID = "/_apis/wit/workitems/{id}";
-    private static final String GET_WORK_ITEM_IMG_BY_ID = "/_apis/wit/attachments/{id}";
 
     @Value("${azure.api.apiVersion}")
     private String azureDevopsApiVersion;
@@ -55,10 +52,10 @@ public class AzureDevopsRestWorkItemClient {
                 .block(REQUEST_TIMEOUT);
     }
 
-    public byte[] retrieveImageFromWorkItemById(final String imageFullUrl)
+    public byte[] getImageByUrl(final String imageFullUrl)
             throws ExecutionException, InterruptedException, IOException {
 
-        byte[] response  = devopsRestApiClient
+        return devopsRestApiClient
                 .mutate()
                 .baseUrl(imageFullUrl)
                 .build()
@@ -68,8 +65,6 @@ public class AzureDevopsRestWorkItemClient {
                 .bodyToMono(byte[].class)
                 .block();
 
-
-        return response;
     }
 
 }

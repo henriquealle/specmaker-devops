@@ -41,7 +41,7 @@ public class QueryService {
         XWPFDocument documentStream = null;
 
         if( !Objects.isNull(devopQuery) && !devopQuery.isFolder() ){
-            devopQuery.setWorkItems( workItemService.listByQueryID(queryId) );
+            devopQuery.setWorkItems( workItemService.listWorkItemByQueryID(queryId) );
             documentStream = docCreator.gerarArquivoEspecificacao( devopQuery );
         } else {
             throw new Exception("A query informada é uma pasta ou não existe");

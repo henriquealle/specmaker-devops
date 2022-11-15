@@ -2,6 +2,7 @@ package br.com.specmaker.word;
 
 import br.com.specmaker.azuredevops.AzureDevopsRestWorkItemClient;
 import br.com.specmaker.entity.Query;
+import br.com.specmaker.entity.WorkItemImage;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.util.Units;
 import org.apache.poi.xwpf.usermodel.*;
@@ -41,20 +42,8 @@ public class EspecificacaoWordCreator {
                 adicionarParagrafo(documento, titulo, true, 14);
                 adicionarParagrafo(documento, tratarDetalhesWorkItem( workItem.getDetalhes() ), false, 12);
 
-                workItem.getAttachmentsUrls().forEach(attachUrl ->{
-                    try {
-                        adicionarImagem(documento, getWitImageBy(attachUrl) );
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    } catch (URISyntaxException e) {
-                        throw new RuntimeException(e);
-                    } catch (InvalidFormatException e) {
-                        throw new RuntimeException(e);
-                    } catch (ExecutionException e) {
-                        throw new RuntimeException(e);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
+                workItem.getDescriptionImagens().forEach(image -> {
+                    adicionarImagem(documento, image );
                 });
 
             });
@@ -82,8 +71,9 @@ public class EspecificacaoWordCreator {
         adicionarParagrafo(documento, EspecificacaoTextosFixosHelper.TOPICO_DETALHAMENTO, true, 16);
     }
 
-    private void adicionarImagem(final XWPFDocument documento, final ByteArrayInputStream imagemStream)
-            throws IOException, URISyntaxException, InvalidFormatException {
+    private void adicionarImagem(final XWPFDocument documento, final WorkItemImage imagem ){
+
+        final ByteArrayInputStream imageStream = new ByteArrayInputStream( imagem.getImgFile() );
 
         XWPFParagraph paragrafoComImagem = documento.createParagraph();
         paragrafoComImagem.setAlignment(ParagraphAlignment.LEFT);
@@ -91,10 +81,15 @@ public class EspecificacaoWordCreator {
         XWPFRun imagemRun = paragrafoComImagem.createRun();
         imagemRun.setTextPosition(20);
 
-        imagemRun.addPicture(imagemStream, Document.PICTURE_TYPE_PNG,
-                "", Units.toEMU(400), Units.toEMU(250));
-
-        imagemStream.close();
+        try {
+            imagemRun.addPicture(imageStream, Document.PICTURE_TYPE_PNG,
+                    "", Units.toEMU(imagem.getWidth()), Units.toEMU(imagem.getHeight()));
+            imageStream.close();
+        } catch (InvalidFormatException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 
@@ -143,7 +138,7 @@ public class EspecificacaoWordCreator {
 
     private ByteArrayInputStream getWitImageBy(String imageUrl)
             throws IOException, ExecutionException, InterruptedException {
-        byte[] witImg = witRestClient.retrieveImageFromWorkItemById(imageUrl);
+        byte[] witImg = witRestClient.getImageByUrl(imageUrl);
 
         ByteArrayInputStream imageStream = new ByteArrayInputStream(witImg);
         return imageStream;

@@ -28,6 +28,8 @@ public class WorkItem {
 
     private List<String> attachmentsUrls;
 
+    private List<WorkItemImage> descriptionImagens;
+
     public WorkItem (WorkItemRecord dados){
         this.id = dados.id();
         this.url = dados.url();
