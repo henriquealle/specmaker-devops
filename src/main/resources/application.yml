@@ -1,13 +1,7 @@
-spring:
-  datasource:
-    url: jdbc:mysql://localhost/specmaker
-    username: root
-    password: root
-
 azure:
   api:
-    token: 65v5jlkespalla3bke3jixpt45vnkqmj6ryci5i7rl2v5iaib44q
-    mainFolderId: 5e33dde2-8b60-41be-9e3f-e33845fe3c8c
-    repositorio: PortalCredenciado
-    baseUrl: https://dev.azure.com/sescsp-gti
-    apiVersion: 7.1-preview.2
+    token: ${AZURE_DEVOPS_TOKEN}
+    mainFolderId: ${MAIN_QUERY_FOLDER}
+    repositorio: ${PROJETO_AZURE_DEVOPS}
+    baseUrl: ${AZURE_DEVOPS_BASE_URL}
+    apiVersion: ${AZURE_DEVOPS_API_VERSION}

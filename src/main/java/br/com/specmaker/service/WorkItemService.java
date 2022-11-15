@@ -64,17 +64,19 @@ public class WorkItemService {
     public WorkItemImage getWorkItemImageBy(String imageUrl)
             throws IOException, ExecutionException, InterruptedException {
 
+        WorkItemImage workItemImage = new WorkItemImage();
         byte[] imagem = azureDevopsRestWorkItemClient.getImageByUrl(imageUrl);
         BufferedImage bff = ImageIO.read( new ByteArrayInputStream(imagem) );
 
-        Dimension originalDimension = new Dimension(bff.getWidth(), bff.getHeight());
-        Dimension boundary = new Dimension(450, 300);
-        Dimension newDimension = getScaledDimension(originalDimension, boundary);
+        if ( !Objects.isNull(bff) ){
+            Dimension originalDimension = new Dimension(bff.getWidth(), bff.getHeight());
+            Dimension boundary = new Dimension(450, 300);
+            Dimension newDimension = getScaledDimension(originalDimension, boundary);
 
-        WorkItemImage workItemImage = new WorkItemImage();
-        workItemImage.setImgFile(imagem);
-        workItemImage.setWidth( (int) newDimension.getWidth() );
-        workItemImage.setHeight((int) newDimension.getHeight() );
+            workItemImage.setImgFile(imagem);
+            workItemImage.setWidth( (int) newDimension.getWidth() );
+            workItemImage.setHeight((int) newDimension.getHeight() );
+        }
         return workItemImage;
     }
 
