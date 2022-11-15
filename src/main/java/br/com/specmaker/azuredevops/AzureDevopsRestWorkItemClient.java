@@ -15,7 +15,7 @@ import java.util.concurrent.ExecutionException;
 @Component
 public class AzureDevopsRestWorkItemClient {
 
-    private final WebClient localApiClient;
+    private final WebClient devopsRestApiClient;
 
     private static final Duration REQUEST_TIMEOUT = Duration.ofSeconds(10);
 
@@ -27,12 +27,12 @@ public class AzureDevopsRestWorkItemClient {
     private String azureDevopsApiVersion;
 
     @Autowired
-    public AzureDevopsRestWorkItemClient(WebClient localApiClient){
-        this.localApiClient = localApiClient;
+    public AzureDevopsRestWorkItemClient(WebClient devopsRestApiClient){
+        this.devopsRestApiClient = devopsRestApiClient;
     }
 
     public QueryWorkItemRecord listWorkItemByQueryId(String queryId){
-        return localApiClient
+        return devopsRestApiClient
                 .get()
                 .uri(uriBuilder -> uriBuilder
                         .path(GET_WORK_ITEM_BY_QUERY_ID)
@@ -44,7 +44,7 @@ public class AzureDevopsRestWorkItemClient {
     }
 
     public WorkItemRecord getWorkItemById(Long workItemId){
-        return localApiClient
+        return devopsRestApiClient
                 .get()
                 .uri(uriBuilder -> uriBuilder
                         .path(GET_WORK_ITEM_BY_WIT_ID)
@@ -55,15 +55,14 @@ public class AzureDevopsRestWorkItemClient {
                 .block(REQUEST_TIMEOUT);
     }
 
-    public byte[] retrieveImageFromWorkItemById(final String imageId)
+    public byte[] retrieveImageFromWorkItemById(final String imageFullUrl)
             throws ExecutionException, InterruptedException, IOException {
 
-        byte[] response  = localApiClient
+        byte[] response  = devopsRestApiClient
+                .mutate()
+                .baseUrl(imageFullUrl)
+                .build()
                 .get()
-                .uri(uriBuilder -> uriBuilder
-                        .path(GET_WORK_ITEM_IMG_BY_ID)
-                        .queryParam("fileName", "image.png")
-                        .build(imageId))
                 .accept(MediaType.IMAGE_PNG)
                 .retrieve()
                 .bodyToMono(byte[].class)

@@ -8,7 +8,9 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 
 @Configuration
-public class RestWebClientFactory {
+public class RestAzureDevopsWebClientFactory {
+
+    private static final int MAX_MEMORY_SIZE = 16 * 1024 * 1024;
 
     @Value("${azure.api.baseUrl}")
     private String azureDevopsBaseUrl;
@@ -29,6 +31,9 @@ public class RestWebClientFactory {
                 .defaultHeaders((header) -> {
                     header.setBasicAuth("", azureDevopsToken);
                     header.setContentType(MediaType.valueOf("application/json-patch+json"));
+                }).codecs(configurer -> {
+                    configurer.defaultCodecs()
+                            .maxInMemorySize(MAX_MEMORY_SIZE);
                 })
                 .build();
     }

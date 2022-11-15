@@ -3,9 +3,11 @@ package br.com.specmaker.entity;
 
 import br.com.specmaker.enuns.WorkItemType;
 import br.com.specmaker.record.WorkItemRecord;
+import br.com.specmaker.utils.StringHtmlUtils;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -22,8 +24,9 @@ public class WorkItem {
     private String atribuidoPara;
     private String abertoPor;
     private String url;
-
     private LocalDateTime dataCriacao;
+
+    private List<String> attachmentsUrls;
 
     public WorkItem (WorkItemRecord dados){
         this.id = dados.id();
@@ -40,6 +43,8 @@ public class WorkItem {
         } else {
             this.detalhes = dados.fields().description();
         }
+
+        this.attachmentsUrls = StringHtmlUtils.extractImgTagFromString(this.detalhes);
     }
 
 

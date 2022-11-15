@@ -2,7 +2,7 @@ package br.com.specmaker.service;
 
 import br.com.specmaker.azuredevops.AzureDevopsRestQueryClient;
 import br.com.specmaker.entity.Query;
-import br.com.specmaker.word.WordDocCreator;
+import br.com.specmaker.word.EspecificacaoWordCreator;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,7 +21,7 @@ public class QueryService {
     private WorkItemService workItemService;
 
     @Autowired
-    private WordDocCreator docCreator;
+    private EspecificacaoWordCreator docCreator;
 
 
 

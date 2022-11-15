@@ -18,7 +18,7 @@ import java.util.concurrent.ExecutionException;
 
 
 @Component
-public class WordDocCreator {
+public class EspecificacaoWordCreator {
 
     private static final String FONT_CALIBRI = "Calibri";
 
@@ -35,25 +35,28 @@ public class WordDocCreator {
 
             adicionarParagrafo(documento, " ", false, 16);
 
-            devopsQuery.getWorkItems().forEach(p -> {
-                String index = (devopsQuery.getWorkItems().indexOf( p ) + 1) + ". ";
-                String titulo = index.concat( p.getTitulo() );
+            devopsQuery.getWorkItems().forEach(workItem -> {
+                String index = (devopsQuery.getWorkItems().indexOf( workItem ) + 1) + ". ";
+                String titulo = index.concat( workItem.getTitulo() );
                 adicionarParagrafo(documento, titulo, true, 14);
-                adicionarParagrafo(documento, tratarDetalhesWorkItem( p.getDetalhes() ), false, 12);
+                adicionarParagrafo(documento, tratarDetalhesWorkItem( workItem.getDetalhes() ), false, 12);
 
-                try {
-                    adicionarImagem(documento, getWitImageBy("") );
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                } catch (URISyntaxException e) {
-                    throw new RuntimeException(e);
-                } catch (InvalidFormatException e) {
-                    throw new RuntimeException(e);
-                } catch (ExecutionException e) {
-                    throw new RuntimeException(e);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
+                workItem.getAttachmentsUrls().forEach(attachUrl ->{
+                    try {
+                        adicionarImagem(documento, getWitImageBy(attachUrl) );
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    } catch (URISyntaxException e) {
+                        throw new RuntimeException(e);
+                    } catch (InvalidFormatException e) {
+                        throw new RuntimeException(e);
+                    } catch (ExecutionException e) {
+                        throw new RuntimeException(e);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+
             });
 
 
@@ -85,7 +88,9 @@ public class WordDocCreator {
         imagemRun.setTextPosition(20);
 
         imagemRun.addPicture(imagemStream, Document.PICTURE_TYPE_PNG,
-                "", Units.toEMU(400), Units.toEMU(200));
+                "", Units.toEMU(400), Units.toEMU(250));
+
+        imagemStream.close();
 
     }
 
@@ -132,10 +137,9 @@ public class WordDocCreator {
         return str;
     }
 
-    private ByteArrayInputStream getWitImageBy(String imageId)
+    private ByteArrayInputStream getWitImageBy(String imageUrl)
             throws IOException, ExecutionException, InterruptedException {
-        byte[] witImg = witRestClient.retrieveImageFromWorkItemById(
-                "950f0c34-5dca-4a2a-82b0-6135b43afbc7");
+        byte[] witImg = witRestClient.retrieveImageFromWorkItemById(imageUrl);
 
         ByteArrayInputStream imageStream = new ByteArrayInputStream(witImg);
         return imageStream;
