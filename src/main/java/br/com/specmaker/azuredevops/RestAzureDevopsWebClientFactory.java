@@ -27,7 +27,7 @@ public class RestAzureDevopsWebClientFactory {
     @Bean
     public WebClient localApiClient() {
         return WebClient.builder()
-                .baseUrl( createFullBaseUrl() )
+                .baseUrl( azureDevopsBaseUrl )
                 .defaultHeaders((header) -> {
                     header.setBasicAuth("", azureDevopsToken);
                     header.setContentType(MediaType.valueOf("application/json-patch+json"));
@@ -38,8 +38,5 @@ public class RestAzureDevopsWebClientFactory {
                 .build();
     }
 
-    private String createFullBaseUrl(){
-        return azureDevopsBaseUrl.concat("/").concat(azureDevopsRepo);
-    }
 
 }

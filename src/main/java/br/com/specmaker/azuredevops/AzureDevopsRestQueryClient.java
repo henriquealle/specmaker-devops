@@ -15,7 +15,7 @@ public class AzureDevopsRestQueryClient {
 
     private static final Duration REQUEST_TIMEOUT = Duration.ofSeconds(10);
 
-    private static final String GET_QUERY_BY_ID = "/_apis/wit/queries/{id}";
+    private static final String GET_QUERY_BY_ID = "/{projectName}/_apis/wit/queries/{id}";
 
     @Value("${azure.api.apiVersion}")
     private String azureDevopsApiVersion;
@@ -25,14 +25,14 @@ public class AzureDevopsRestQueryClient {
         this.localApiClient = localApiClient;
     }
 
-    public QueryRecord getQueryById(String id){
+    public QueryRecord getQueryById(String projectName, String id){
         return localApiClient
                 .get()
                 .uri(uriBuilder -> uriBuilder
                         .path(GET_QUERY_BY_ID)
                         .queryParam("api-version", azureDevopsApiVersion)
                         .queryParam("$depth", 2)
-                        .build(id))
+                        .build(projectName, id))
                 .retrieve()
                 .bodyToMono(QueryRecord.class)
                 .block(REQUEST_TIMEOUT);

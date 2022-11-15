@@ -33,19 +33,22 @@ public class QueryController {
         return queryService.listarQueries();
     }
 
-    @GetMapping("/{id}")
-    public Query getQueryByID(@PathVariable(value = "id", required = true) String id){
-        return queryService.getQueryByID(id);
+    @GetMapping("/{projectName}/{id}")
+    public Query getQueryByID(
+            @PathVariable(value = "projectName", required = true) String projectName,
+            @PathVariable(value = "id", required = true) String id){
+        return queryService.getQueryByID(projectName, id);
     }
 
-    @GetMapping("/gerar-documento/{queryId}")
+    @GetMapping("/gerar-documento/{projectName}/{queryId}")
     public ResponseEntity<ByteArrayResource> gerarDocumento(
+            @PathVariable(value = "projectName", required = true) String projectName,
             @PathVariable(value = "queryId", required = true) String queryId )
             throws Exception {
 
         try {
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            XWPFDocument documentStream = queryService.gerarDocumento(queryId);
+            XWPFDocument documentStream = queryService.gerarDocumento(projectName, queryId);
             HttpHeaders header = new HttpHeaders();
             header.setContentType(new MediaType("application", "force-download"));
             header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=especificacao.docx");

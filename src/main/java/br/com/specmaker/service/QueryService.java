@@ -29,19 +29,19 @@ public class QueryService {
         return new ArrayList<Query>();
     }
 
-    public Query getQueryByID(String id){
-        return new Query( azureDevopsRestQueryClient.getQueryById(id) );
+    public Query getQueryByID(String projectName, String id){
+        return new Query( azureDevopsRestQueryClient.getQueryById( projectName, id ) );
     }
 
 
-    public XWPFDocument gerarDocumento(String queryId)
+    public XWPFDocument gerarDocumento(String projectName, String queryId)
             throws Exception {
 
-        Query devopQuery = getQueryByID(queryId);
+        Query devopQuery = getQueryByID(projectName, queryId);
         XWPFDocument documentStream = null;
 
         if( !Objects.isNull(devopQuery) && !devopQuery.isFolder() ){
-            devopQuery.setWorkItems( workItemService.listWorkItemByQueryID(queryId) );
+            devopQuery.setWorkItems( workItemService.listWorkItemByQueryID(projectName, queryId) );
             documentStream = docCreator.gerarArquivoEspecificacao( devopQuery );
         } else {
             throw new Exception("A query informada é uma pasta ou não existe");

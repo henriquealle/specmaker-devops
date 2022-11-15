@@ -14,9 +14,11 @@ public class WorkItemController {
     @Autowired
     private WorkItemService workItemService;
 
-    @GetMapping
-    public List<WorkItem> listByQueryID(@RequestParam(value = "queryId", required = false) String queryId){
-        return workItemService.listWorkItemByQueryID(queryId);
+    @GetMapping("/{projectName}")
+    public List<WorkItem> listByQueryID(
+            @PathVariable(value = "projectName", required = true) String projectName,
+            @RequestParam(value = "queryId", required = false) String queryId){
+        return workItemService.listWorkItemByQueryID(projectName, queryId);
     }
 
 

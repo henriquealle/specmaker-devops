@@ -1,7 +1,7 @@
 azure:
   api:
-    token: ${AZURE_DEVOPS_TOKEN}
-    mainFolderId: ${MAIN_QUERY_FOLDER}
-    repositorio: ${PROJETO_AZURE_DEVOPS}
-    baseUrl: ${AZURE_DEVOPS_BASE_URL}
-    apiVersion: ${AZURE_DEVOPS_API_VERSION}
+    token: ${AZURE_DEVOPS_TOKEN:65v5jlkespalla3bke3jixpt45vnkqmj6ryci5i7rl2v5iaib44q}
+    mainFolderId: ${MAIN_QUERY_FOLDER:5e33dde2-8b60-41be-9e3f-e33845fe3c8c}
+    repositorio: ${PROJETO_AZURE_DEVOPS:PortalCredenciado}
+    baseUrl: ${AZURE_DEVOPS_BASE_URL:https://dev.azure.com/sescsp-gti}
+    apiVersion: ${AZURE_DEVOPS_API_VERSION:7.1-preview.2}

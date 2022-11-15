@@ -17,8 +17,8 @@ public class AzureDevopsRestWorkItemClient {
 
     private final WebClient devopsRestApiClient;
     private static final Duration REQUEST_TIMEOUT = Duration.ofSeconds(10);
-    private static final String GET_WORK_ITEM_BY_QUERY_ID = "/_apis/wit/wiql/{queryId}";
-    private static final String GET_WORK_ITEM_BY_WIT_ID = "/_apis/wit/workitems/{id}";
+    private static final String GET_WORK_ITEM_BY_QUERY_ID = "/{projectName}/_apis/wit/wiql/{queryId}";
+    private static final String GET_WORK_ITEM_BY_WIT_ID = "/{projectName}/_apis/wit/workitems/{id}";
 
     @Value("${azure.api.apiVersion}")
     private String azureDevopsApiVersion;
@@ -28,25 +28,25 @@ public class AzureDevopsRestWorkItemClient {
         this.devopsRestApiClient = devopsRestApiClient;
     }
 
-    public QueryWorkItemRecord listWorkItemByQueryId(String queryId){
+    public QueryWorkItemRecord listWorkItemByQueryId(String projectName, String queryId){
         return devopsRestApiClient
                 .get()
                 .uri(uriBuilder -> uriBuilder
                         .path(GET_WORK_ITEM_BY_QUERY_ID)
                         .queryParam("api-version", azureDevopsApiVersion)
-                        .build(queryId))
+                        .build(projectName, queryId))
                 .retrieve()
                 .bodyToMono(QueryWorkItemRecord.class)
                 .block(REQUEST_TIMEOUT);
     }
 
-    public WorkItemRecord getWorkItemById(Long workItemId){
+    public WorkItemRecord getWorkItemById(String projectName, Long workItemId){
         return devopsRestApiClient
                 .get()
                 .uri(uriBuilder -> uriBuilder
                         .path(GET_WORK_ITEM_BY_WIT_ID)
                         .queryParam("api-version", azureDevopsApiVersion)
-                        .build(workItemId))
+                        .build(projectName, workItemId))
                 .retrieve()
                 .bodyToMono(WorkItemRecord.class)
                 .block(REQUEST_TIMEOUT);

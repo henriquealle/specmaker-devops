@@ -5,6 +5,7 @@ import br.com.specmaker.entity.WorkItem;
 import br.com.specmaker.entity.WorkItemImage;
 import br.com.specmaker.record.QueryWorkItemRecord;
 import br.com.specmaker.record.WorkItemRecord;
+import org.apache.commons.validator.routines.UrlValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
@@ -23,22 +25,22 @@ public class WorkItemService {
 
     @Autowired
     private AzureDevopsRestWorkItemClient azureDevopsRestWorkItemClient;
-    public List<WorkItem> listWorkItemByQueryID(String queryID){
+    public List<WorkItem> listWorkItemByQueryID(String projectName, String queryID){
         final List<WorkItem> workItems = new ArrayList<>(0);
         QueryWorkItemRecord queryWorkItemRecord = azureDevopsRestWorkItemClient
-                .listWorkItemByQueryId(queryID);
+                .listWorkItemByQueryId(projectName, queryID);
 
         if (queryWorkItemRecord != null && queryWorkItemRecord.workItems() != null) {
             queryWorkItemRecord.workItems().forEach(wit -> {
-                workItems.add( getWorkItemById( wit.id() ) );
+                workItems.add( getWorkItemById( projectName, wit.id() ) );
             });
         }
 
         return workItems;
     }
 
-    public WorkItem getWorkItemById(Long id){
-        WorkItemRecord workItemRecord = azureDevopsRestWorkItemClient.getWorkItemById(id);
+    public WorkItem getWorkItemById(String projectName, Long id){
+        WorkItemRecord workItemRecord = azureDevopsRestWorkItemClient.getWorkItemById(projectName, id);
         WorkItem workItem = new WorkItem( workItemRecord );
         final List<WorkItemImage> imagens = new ArrayList<>(0);
 
@@ -65,7 +67,15 @@ public class WorkItemService {
             throws IOException, ExecutionException, InterruptedException {
 
         WorkItemImage workItemImage = new WorkItemImage();
-        byte[] imagem = azureDevopsRestWorkItemClient.getImageByUrl(imageUrl);
+        byte[] imagem = null;
+
+        if( ! UrlValidator.getInstance().isValid(imageUrl) ) {
+            imageUrl = imageUrl.replace("data:image/jpeg;base64,","");
+            imagem = Base64.getDecoder().decode(imageUrl);
+        } else {
+            imagem = azureDevopsRestWorkItemClient.getImageByUrl(imageUrl);
+        }
+
         BufferedImage bff = ImageIO.read( new ByteArrayInputStream(imagem) );
 
         if ( !Objects.isNull(bff) ){
@@ -77,6 +87,7 @@ public class WorkItemService {
             workItemImage.setWidth( (int) newDimension.getWidth() );
             workItemImage.setHeight((int) newDimension.getHeight() );
         }
+
         return workItemImage;
     }
 
