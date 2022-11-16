@@ -5,10 +5,10 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - JAVA_OPTIONS=-Xms512m -XX:+UseParallelGC
+      - JAVA_OPTIONS=-Xms512m
       - AZURE_DEVOPS_BASE_URL=https://dev.azure.com/sescsp-gti
       - AZURE_DEVOPS_TOKEN=65v5jlkespalla3bke3jixpt45vnkqmj6ryci5i7rl2v5iaib44q
-      - AZURE_DEVOPS_API_VERSION:7.1-preview.2
+      - AZURE_DEVOPS_API_VERSION=7.1-preview.2
       - PROJETO_AZURE_DEVOPS=PortalCredenciado
       - MAIN_QUERY_FOLDER=5e33dde2-8b60-41be-9e3f-e33845fe3c8c
     restart: always
