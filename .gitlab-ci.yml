@@ -1,6 +1,20 @@
 variables:
   MAVEN_OPTS: "-Dmaven.repo.local=.m2"
 
+
+test:
+  stage: test
+  image: maven:3.8.6-openjdk-18-slim
+  script:
+    - mvn test
+  artifacts:
+    paths:
+      - target/
+  cache:
+    paths:
+      - specmaker-api/.m2/
+
+
 build:
   stage: build
   image: maven:3.8.6-openjdk-18-slim
