@@ -1,6 +1,7 @@
-package br.com.specmaker.azuredevops;
+package br.com.specmaker.apiclient.azuredevops;
 
-import br.com.specmaker.record.QueryRecord;
+import br.com.specmaker.apiclient.RestQueryClient;
+import br.com.specmaker.apiclient.records.QueryRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -9,7 +10,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.time.Duration;
 
 @Component
-public class AzureDevopsRestQueryClient {
+public class AzureDevopsRestQueryClient implements RestQueryClient {
 
     private final WebClient localApiClient;
 

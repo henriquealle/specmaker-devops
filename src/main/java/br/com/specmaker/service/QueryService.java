@@ -1,6 +1,6 @@
 package br.com.specmaker.service;
 
-import br.com.specmaker.azuredevops.AzureDevopsRestQueryClient;
+import br.com.specmaker.apiclient.RestQueryClient;
 import br.com.specmaker.entity.Query;
 import br.com.specmaker.word.EspecificacaoWordCreator;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
@@ -15,7 +15,7 @@ import java.util.Objects;
 public class QueryService {
 
     @Autowired
-    private AzureDevopsRestQueryClient azureDevopsRestQueryClient;
+    private RestQueryClient apiQueryClient;
 
     @Autowired
     private WorkItemService workItemService;
@@ -30,7 +30,7 @@ public class QueryService {
     }
 
     public Query getQueryByID(String projectName, String id){
-        return new Query( azureDevopsRestQueryClient.getQueryById( projectName, id ) );
+        return new Query( apiQueryClient.getQueryById( projectName, id ) );
     }
 
 
@@ -41,7 +41,7 @@ public class QueryService {
         XWPFDocument documentStream = null;
 
         if( !Objects.isNull(devopQuery) && !devopQuery.isFolder() ){
-            devopQuery.setWorkItems( workItemService.listWorkItemByQueryID(projectName, queryId) );
+            devopQuery.setWorkItems( workItemService.listWorkItemBy(projectName, queryId) );
             documentStream = docCreator.gerarArquivoEspecificacao( devopQuery );
         } else {
             throw new Exception("A query informada é uma pasta ou não existe");

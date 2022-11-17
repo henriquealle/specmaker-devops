@@ -1,12 +1,10 @@
 package br.com.specmaker.entity;
 
 
-import br.com.specmaker.record.QueryRecord;
+import br.com.specmaker.apiclient.records.QueryRecord;
 import lombok.*;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 @NoArgsConstructor

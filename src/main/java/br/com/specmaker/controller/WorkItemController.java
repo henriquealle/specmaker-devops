@@ -18,7 +18,7 @@ public class WorkItemController {
     public List<WorkItem> listByQueryID(
             @PathVariable(value = "projectName", required = true) String projectName,
             @RequestParam(value = "queryId", required = false) String queryId){
-        return workItemService.listWorkItemByQueryID(projectName, queryId);
+        return workItemService.listWorkItemBy(projectName, queryId);
     }
 
 

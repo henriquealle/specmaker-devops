@@ -2,7 +2,7 @@ package br.com.specmaker.entity;
 
 
 import br.com.specmaker.enuns.WorkItemType;
-import br.com.specmaker.record.WorkItemRecord;
+import br.com.specmaker.apiclient.records.WorkItemRecord;
 import br.com.specmaker.utils.StringHtmlUtils;
 import lombok.*;
 

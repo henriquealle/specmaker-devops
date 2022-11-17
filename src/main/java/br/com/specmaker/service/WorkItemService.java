@@ -1,10 +1,10 @@
 package br.com.specmaker.service;
 
-import br.com.specmaker.azuredevops.AzureDevopsRestWorkItemClient;
+import br.com.specmaker.apiclient.RestWorkItemClient;
+import br.com.specmaker.apiclient.records.QueryWorkItemRecord;
+import br.com.specmaker.apiclient.records.WorkItemRecord;
 import br.com.specmaker.entity.WorkItem;
 import br.com.specmaker.entity.WorkItemImage;
-import br.com.specmaker.record.QueryWorkItemRecord;
-import br.com.specmaker.record.WorkItemRecord;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,23 +24,25 @@ import java.util.concurrent.ExecutionException;
 public class WorkItemService {
 
     @Autowired
-    private AzureDevopsRestWorkItemClient azureDevopsRestWorkItemClient;
-    public List<WorkItem> listWorkItemByQueryID(String projectName, String queryID){
+    private RestWorkItemClient apiWorkItemClient;
+
+    public List<WorkItem> listWorkItemBy(String projectName, String queryID){
         final List<WorkItem> workItems = new ArrayList<>(0);
-        QueryWorkItemRecord queryWorkItemRecord = azureDevopsRestWorkItemClient
+        QueryWorkItemRecord queryWorkItemRecord = apiWorkItemClient
                 .listWorkItemByQueryId(projectName, queryID);
 
-        if (queryWorkItemRecord != null && queryWorkItemRecord.workItems() != null) {
+        if ( !Objects.isNull(queryWorkItemRecord)
+                && !Objects.isNull(queryWorkItemRecord.workItems()) ) {
             queryWorkItemRecord.workItems().forEach(wit -> {
-                workItems.add( getWorkItemById( projectName, wit.id() ) );
+                workItems.add( getWorkItemBy( projectName, wit.id() ) );
             });
         }
 
         return workItems;
     }
 
-    public WorkItem getWorkItemById(String projectName, Long id){
-        WorkItemRecord workItemRecord = azureDevopsRestWorkItemClient.getWorkItemById(projectName, id);
+    public WorkItem getWorkItemBy(String projectName, Long id){
+        WorkItemRecord workItemRecord = apiWorkItemClient.getWorkItemById(projectName, id);
         WorkItem workItem = new WorkItem( workItemRecord );
         final List<WorkItemImage> imagens = new ArrayList<>(0);
 
@@ -73,7 +75,7 @@ public class WorkItemService {
             imageUrl = imageUrl.replace("data:image/jpeg;base64,","");
             imagem = Base64.getDecoder().decode(imageUrl);
         } else {
-            imagem = azureDevopsRestWorkItemClient.getImageByUrl(imageUrl);
+            imagem = apiWorkItemClient.getImageByUrl(imageUrl);
         }
 
         BufferedImage bff = ImageIO.read( new ByteArrayInputStream(imagem) );

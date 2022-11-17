@@ -1,6 +1,4 @@
-package br.com.specmaker.record;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+package br.com.specmaker.apiclient.records;
 
 import java.util.List;
 

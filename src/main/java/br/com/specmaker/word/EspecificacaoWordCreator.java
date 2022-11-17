@@ -1,6 +1,6 @@
 package br.com.specmaker.word;
 
-import br.com.specmaker.azuredevops.AzureDevopsRestWorkItemClient;
+import br.com.specmaker.apiclient.azuredevops.AzureDevopsRestRestWorkItemClient;
 import br.com.specmaker.entity.Query;
 import br.com.specmaker.entity.WorkItemImage;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -23,7 +23,7 @@ public class EspecificacaoWordCreator {
     private static final String FONT_CALIBRI = "Calibri";
 
     @Autowired
-    private AzureDevopsRestWorkItemClient witRestClient;
+    private AzureDevopsRestRestWorkItemClient witRestClient;
 
     public XWPFDocument gerarArquivoEspecificacao(final Query devopsQuery)
             throws IOException, URISyntaxException, InvalidFormatException {
@@ -107,9 +107,9 @@ public class EspecificacaoWordCreator {
         var tabela = documento.createTable();
         XWPFTableRow linha = tabela.getRow(0);
         linha.getCell(0).setText("Projeto");
-        linha.addNewTableCell().setText("Nome do Projeto");
+        linha.addNewTableCell().setText("[Informar o Nome do Projeto]");
         linha.addNewTableCell().setText("Analista responsável");
-        linha.addNewTableCell().setText("Nome e e-mail Analista responsável");
+        linha.addNewTableCell().setText("[Informar o nome e e-mail Analista responsável]");
 
         linha = tabela.createRow();
         linha.getCell(0).setText("Data da solicitação");

@@ -1,7 +1,8 @@
-package br.com.specmaker.azuredevops;
+package br.com.specmaker.apiclient.azuredevops;
 
-import br.com.specmaker.record.QueryWorkItemRecord;
-import br.com.specmaker.record.WorkItemRecord;
+import br.com.specmaker.apiclient.RestWorkItemClient;
+import br.com.specmaker.apiclient.records.QueryWorkItemRecord;
+import br.com.specmaker.apiclient.records.WorkItemRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -13,7 +14,7 @@ import java.time.Duration;
 import java.util.concurrent.ExecutionException;
 
 @Component
-public class AzureDevopsRestWorkItemClient {
+public class AzureDevopsRestRestWorkItemClient implements RestWorkItemClient {
 
     private final WebClient devopsRestApiClient;
     private static final Duration REQUEST_TIMEOUT = Duration.ofSeconds(10);
@@ -24,7 +25,7 @@ public class AzureDevopsRestWorkItemClient {
     private String azureDevopsApiVersion;
 
     @Autowired
-    public AzureDevopsRestWorkItemClient(WebClient devopsRestApiClient){
+    public AzureDevopsRestRestWorkItemClient(WebClient devopsRestApiClient){
         this.devopsRestApiClient = devopsRestApiClient;
     }
 
@@ -63,8 +64,7 @@ public class AzureDevopsRestWorkItemClient {
                 .accept(MediaType.IMAGE_PNG)
                 .retrieve()
                 .bodyToMono(byte[].class)
-                .block();
-
+                .block(REQUEST_TIMEOUT);
     }
 
 }

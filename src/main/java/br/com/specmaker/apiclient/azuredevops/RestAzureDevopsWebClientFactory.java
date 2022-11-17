@@ -1,5 +1,6 @@
-package br.com.specmaker.azuredevops;
+package br.com.specmaker.apiclient.azuredevops;
 
+import br.com.specmaker.apiclient.WebClientFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,7 +9,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 
 @Configuration
-public class RestAzureDevopsWebClientFactory {
+public class RestAzureDevopsWebClientFactory implements WebClientFactory {
 
     private static final int MAX_MEMORY_SIZE = 16 * 1024 * 1024;
 

@@ -1,4 +1,4 @@
-package br.com.specmaker.record;
+package br.com.specmaker.apiclient.records;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
