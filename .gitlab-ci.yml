@@ -3,7 +3,7 @@ variables:
 
 build:
   stage: build
-  image: maven:3.6.0-jdk-8
+  image: 3.8.6-openjdk-18
   script:
     - mvn clean install -DskipTests
   artifacts:
