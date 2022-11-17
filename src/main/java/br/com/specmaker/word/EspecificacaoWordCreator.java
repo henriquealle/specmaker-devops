@@ -36,7 +36,7 @@ public class EspecificacaoWordCreator {
 
             /* adicionando os workitens e seu detalhamento no documento*/
             devopsQuery.getWorkItems().forEach(workItem -> {
-                String index = (devopsQuery.getWorkItems().indexOf( workItem ) + 1) + ". ";
+                String index = "4.".concat( String.valueOf( (devopsQuery.getWorkItems().indexOf( workItem ) + 1) ) ) + ". ";
                 String titulo = index.concat( workItem.getTitulo() );
                 adicionarParagrafo(documento, titulo, true, 14);
                 adicionarParagrafo(documento, tratarDetalhesWorkItem( workItem.getDetalhes() ), false, 12);
