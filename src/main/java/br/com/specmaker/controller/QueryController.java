@@ -47,18 +47,22 @@ public class QueryController {
             throws Exception {
 
         try {
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            XWPFDocument documentStream = queryService.gerarDocumento(projectName, queryId);
-            HttpHeaders header = new HttpHeaders();
-            header.setContentType(new MediaType("application", "force-download"));
-            header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=especificacao.docx");
-            documentStream.write(stream);
-            documentStream.close();
-            return new ResponseEntity<>(new ByteArrayResource(stream.toByteArray()),
-                    header, HttpStatus.CREATED);
+            return getByteArrayResourceResponseEntity(projectName, queryId);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    private ResponseEntity<ByteArrayResource> getByteArrayResourceResponseEntity(String projectName, String queryId) throws Exception {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        XWPFDocument documentStream = queryService.gerarDocumento(projectName, queryId);
+        HttpHeaders header = new HttpHeaders();
+        header.setContentType(new MediaType("application", "force-download"));
+        header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=especificacao.docx");
+        documentStream.write(stream);
+        documentStream.close();
+        return new ResponseEntity<>(new ByteArrayResource(stream.toByteArray()),
+                header, HttpStatus.CREATED);
     }
 }
