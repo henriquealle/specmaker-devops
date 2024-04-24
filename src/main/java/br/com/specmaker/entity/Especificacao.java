@@ -1,6 +1,7 @@
 package br.com.specmaker.entity;
 
 
+import br.com.specmaker.record.EspecificacaoRecord;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,7 +18,7 @@ public class Especificacao {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Column(name = "titulo", nullable = false)
@@ -30,4 +31,9 @@ public class Especificacao {
     @JoinColumn(name = "id_projeto")
     private Projeto projeto;
 
+    public Especificacao(EspecificacaoRecord especificacaoRecord) {
+        this.titulo = especificacaoRecord.titulo();
+        this.urlArquivo = especificacaoRecord.urlArquivo();
+
+    }
 }

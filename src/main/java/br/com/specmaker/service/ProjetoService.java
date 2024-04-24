@@ -23,4 +23,8 @@ public class ProjetoService {
     public List<Projeto> findAll(Pageable pageable) {
         return projetoRepository.findAll(pageable).toList();
     }
+
+    public void cadastrar(Projeto projeto) {
+        projetoRepository.save(projeto);
+    }
 }

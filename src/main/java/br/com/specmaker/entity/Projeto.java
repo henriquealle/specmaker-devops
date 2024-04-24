@@ -1,6 +1,7 @@
 package br.com.specmaker.entity;
 
 
+import br.com.specmaker.record.CadastroProjetoRecord;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,7 +20,7 @@ public class Projeto {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "produto")
@@ -50,7 +51,16 @@ public class Projeto {
     private List<Especificacao> especificacoes;
 
 
-    public Projeto(Projeto projeto) {
+    public Projeto(CadastroProjetoRecord cadastroProjeto) {
+        this.cliente = cadastroProjeto.cliente();
+        this.produto = cadastroProjeto.produto();
+        this.nomeProjeto = cadastroProjeto.nomeProjeto();
+        this.responsavel = cadastroProjeto.responsavel();
+        this.dataInicioProjeto = cadastroProjeto.dataInicioProjeto();
+        this.dtAtualizacao = LocalDateTime.now();
+        this.dtCriacao = LocalDateTime.now();
+        this.especificacoes = cadastroProjeto.especificacoes().stream().map(Especificacao::new).toList();
+        this.especificacoes.forEach(e -> e.setProjeto(this));
     }
 
 }
