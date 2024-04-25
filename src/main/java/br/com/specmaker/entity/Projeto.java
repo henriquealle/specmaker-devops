@@ -2,6 +2,8 @@ package br.com.specmaker.entity;
 
 
 import br.com.specmaker.record.CadastroProjetoRecord;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -16,6 +18,7 @@ import java.util.List;
 @Setter
 @Entity
 @Table(name = "projeto")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Projeto {
 
     @Id

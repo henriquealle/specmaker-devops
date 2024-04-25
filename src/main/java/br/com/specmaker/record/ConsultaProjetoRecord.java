@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public record ListagemProjetosRecord(
+public record ConsultaProjetoRecord(
         Long id,
         String produto,
         String cliente,
@@ -20,7 +20,7 @@ public record ListagemProjetosRecord(
 
 ) {
 
-    public ListagemProjetosRecord (Projeto projeto){
+    public ConsultaProjetoRecord(Projeto projeto){
         this(projeto.getId(),
                 projeto.getProduto(),
                 projeto.getCliente(),

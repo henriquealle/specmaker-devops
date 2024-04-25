@@ -27,4 +27,12 @@ public class ProjetoService {
     public void cadastrar(Projeto projeto) {
         projetoRepository.save(projeto);
     }
+
+    public void excluir(Long id) {
+        projetoRepository.deleteById(id);
+    }
+
+    public Projeto buscarPorId(Long id) {
+        return projetoRepository.findById(id).orElse(null);
+    }
 }
