@@ -3,10 +3,8 @@ package br.com.specmaker.service;
 
 import br.com.specmaker.entity.Projeto;
 import br.com.specmaker.exceptions.ProjetoNotFoundException;
-import br.com.specmaker.record.CadastroProjetoRecord;
 import br.com.specmaker.repository.ProjetoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 

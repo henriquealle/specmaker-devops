@@ -2,6 +2,8 @@ package br.com.specmaker.controller;
 
 import br.com.specmaker.entity.Query;
 import br.com.specmaker.service.QueryService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,9 +26,7 @@ public class QueryController {
 
     @Autowired
     private QueryService queryService;
-
-    @Value("${azure.api.mainFolderId}")
-    private String mainFolder;
+    private static final Logger logger = LogManager.getLogger(QueryController.class);
 
     @GetMapping
     public List<Query> listQueries(){
@@ -46,23 +46,17 @@ public class QueryController {
             @PathVariable(value = "queryId", required = true) String queryId )
             throws Exception {
 
-        try {
-            return getByteArrayResourceResponseEntity(projectName, queryId);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        logger.info("gerando arquivo para a query: ".concat(queryId));
+        return gerarArquivoEspecificacao(projectName, queryId);
+
     }
 
-    private ResponseEntity<ByteArrayResource> getByteArrayResourceResponseEntity(String projectName, String queryId) throws Exception {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        XWPFDocument documentStream = queryService.gerarDocumento(projectName, queryId);
+    private ResponseEntity<ByteArrayResource> gerarArquivoEspecificacao(String projectName, String queryId) throws Exception {
         HttpHeaders header = new HttpHeaders();
         header.setContentType(new MediaType("application", "force-download"));
         header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=especificacao.docx");
-        documentStream.write(stream);
-        documentStream.close();
-        return new ResponseEntity<>(new ByteArrayResource(stream.toByteArray()),
-                header, HttpStatus.CREATED);
+
+        ByteArrayResource arquivo = queryService.obterArquivoEspecificacao(projectName, queryId);
+        return new ResponseEntity<>(arquivo, header, HttpStatus.CREATED);
     }
 }
