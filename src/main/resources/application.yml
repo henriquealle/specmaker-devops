@@ -20,3 +20,10 @@ logging:
     root: info
   pattern:
     console: "%d{dd-MM-yyyy HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+
+aws:
+  s3:
+    accessKeyId: ${AWS_S3_ACCESS_KEY:AKIA4WWDFHT2ZYMBZUXV}
+    secretKey: ${AWS_S3_SECRET_KEY:9RAMVJ8n/1exbb3lFwMn2fZTThJF3uXwishrbOBs+}
+    bucketName: ${AWS_S3_BUCKET_NAME:specmaker}
+  region: ${AWS_REGION:us-west-2}

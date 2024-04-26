@@ -1,6 +1,7 @@
 package br.com.specmaker.controller;
 
 import br.com.specmaker.entity.Query;
+import br.com.specmaker.service.AmazonS3Service;
 import br.com.specmaker.service.QueryService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -26,6 +27,10 @@ public class QueryController {
 
     @Autowired
     private QueryService queryService;
+
+    @Autowired
+    private AmazonS3Service amazonS3Service;
+
     private static final Logger logger = LogManager.getLogger(QueryController.class);
 
     @GetMapping
@@ -49,6 +54,11 @@ public class QueryController {
         logger.info("gerando arquivo para a query: ".concat(queryId));
         return gerarArquivoEspecificacao(projectName, queryId);
 
+    }
+
+    @GetMapping("/arquivos/listar")
+    public List<String> listarArquivosS3(){
+        return amazonS3Service.listFiles();
     }
 
     private ResponseEntity<ByteArrayResource> gerarArquivoEspecificacao(String projectName, String queryId) throws Exception {
