@@ -48,10 +48,19 @@ public class ProjetoController {
         logger.info("projeto cadastrado com sucesso");
     }
 
+    @PutMapping
+    @Transactional
+    public void atualizar(@RequestBody @Valid
+                              CadastroProjetoRecord cadastroProjetoRecord) {
+        logger.info("atualizando projeto {} ", cadastroProjetoRecord);
+        projetoService.alterar( new Projeto( cadastroProjetoRecord ) );
+        logger.info("projeto atualizado com sucesso");
+    }
+
     @DeleteMapping("/{id}")
     @Transactional
     public void excluir(@PathVariable Long id) {
-        logger.info("excluindo projeto ", id);
+        logger.info("excluindo projeto {}", id);
         projetoService.excluir(id);
         logger.info("projeto excluído com sucesso", id);
     }

@@ -10,6 +10,7 @@ import java.util.List;
 
 public record CadastroProjetoRecord (
 
+        Long id,
         @NotBlank
         String produto,
         @NotBlank

@@ -55,6 +55,7 @@ public class Projeto {
 
 
     public Projeto(CadastroProjetoRecord cadastroProjeto) {
+        this.id = cadastroProjeto.id();
         this.cliente = cadastroProjeto.cliente();
         this.produto = cadastroProjeto.produto();
         this.nomeProjeto = cadastroProjeto.nomeProjeto();
