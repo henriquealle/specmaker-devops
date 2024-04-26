@@ -66,7 +66,8 @@ public class QueryController {
         header.setContentType(new MediaType("application", "force-download"));
         header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=especificacao.docx");
 
-        ByteArrayResource arquivo = queryService.obterArquivoEspecificacao(projectName, queryId);
+        ByteArrayOutputStream arquivoByteArray = queryService.obterArquivoEspecificacao(projectName, queryId);
+        ByteArrayResource arquivo = new ByteArrayResource( arquivoByteArray.toByteArray() );
         return new ResponseEntity<>(arquivo, header, HttpStatus.CREATED);
     }
 }

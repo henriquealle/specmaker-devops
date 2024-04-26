@@ -1,13 +1,19 @@
 package br.com.specmaker.service;
 
 
+import br.com.specmaker.entity.Especificacao;
 import br.com.specmaker.entity.Projeto;
 import br.com.specmaker.exceptions.ProjetoNotFoundException;
 import br.com.specmaker.repository.ProjetoRepository;
+import br.com.specmaker.utils.ByteArrayOutputStreamToFile;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.util.List;
 
 @Service
@@ -15,6 +21,15 @@ public class ProjetoService {
 
     @Autowired
     private ProjetoRepository projetoRepository;
+
+    @Autowired
+    private QueryService queryService;
+
+    @Autowired
+    private AmazonS3Service s3Service;
+
+    private static final Logger logger = LogManager.getLogger(ProjetoService.class);
+
 
     public List<Projeto> findAll() {
        return projetoRepository.findAll();
@@ -25,6 +40,26 @@ public class ProjetoService {
     }
 
     public void cadastrar(Projeto projeto) {
+         List<Especificacao> especs = projeto.getEspecificacoes();
+        if (especs != null){
+            especs.forEach(e -> {
+                try {
+                    String nomeProjeto = projeto.getNomeProjeto();
+                    String nomeArquivo = e.getTitulo().concat(".docx");
+                    ByteArrayOutputStream stream = queryService.obterArquivoEspecificacao(nomeProjeto, e.getQueryId());
+                    File arquivoEspecificacao = ByteArrayOutputStreamToFile.createFileBy(nomeArquivo, stream);
+
+                    s3Service.uploadFile(arquivoEspecificacao);
+
+                } catch (Exception ex) {
+                    logger.error(ex);
+                    throw new RuntimeException(ex);
+                }
+
+            });
+
+        }
+
         projetoRepository.save(projeto);
     }
 

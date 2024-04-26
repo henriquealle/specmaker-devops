@@ -5,7 +5,6 @@ import br.com.specmaker.entity.Query;
 import br.com.specmaker.word.EspecificacaoWordCreator;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
@@ -25,6 +24,9 @@ public class QueryService {
     @Autowired
     private EspecificacaoWordCreator docCreator;
 
+    @Autowired
+    private AmazonS3Service amazonS3Service;
+
 
 
     public List<Query> listarQueries(){
@@ -35,13 +37,13 @@ public class QueryService {
         return new Query( apiQueryClient.getQueryById( projectName, id ) );
     }
 
-    public ByteArrayResource obterArquivoEspecificacao(String projectName, String queryId)
+    public ByteArrayOutputStream obterArquivoEspecificacao(String projectName, String queryId)
             throws Exception {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         XWPFDocument documentStream = gerarDocumento(projectName, queryId);
         documentStream.write(stream);
         documentStream.close();
-        return new ByteArrayResource( stream.toByteArray() );
+        return stream;
     }
 
     private XWPFDocument gerarDocumento(String projectName, String queryId)
