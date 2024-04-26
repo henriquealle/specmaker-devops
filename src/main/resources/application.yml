@@ -23,7 +23,7 @@ logging:
 
 aws:
   s3:
-    accessKeyId: ${AWS_S3_ACCESS_KEY:AKIA4WWDFHT2ZYMBZUXV}
-    secretKey: ${AWS_S3_SECRET_KEY:9RAMVJ8n/1exbb3lFwMn2fZTThJF3uXwishrbOBs+}
+    accessKeyId: ${AWS_S3_ACCESS_KEY:AKIA4WWDFHT23YXQRDJL}
+    secretKey: ${AWS_S3_SECRET_KEY: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}
     bucketName: ${AWS_S3_BUCKET_NAME:specmaker}
   region: ${AWS_REGION:us-west-2}
