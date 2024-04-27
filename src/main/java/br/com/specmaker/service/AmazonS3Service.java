@@ -32,6 +32,12 @@ public class AmazonS3Service {
                 .withCannedAcl( CannedAccessControlList.PublicRead ) );
     }
 
+    public void uploadFile(String path, File file) {
+        String fileName = path.concat(file.getName());
+        amazonS3.putObject( new PutObjectRequest( bucketName, fileName, file)
+                .withCannedAcl( CannedAccessControlList.PublicRead ) );
+    }
+
     public List<String> listFiles(){
         List<String> nomeArquivos = new ArrayList<String>(0);
         ListObjectsV2Request request = new ListObjectsV2Request().withBucketName(bucketName);

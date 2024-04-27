@@ -19,7 +19,7 @@ import java.util.List;
 @Entity
 @Table(name = "projeto")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-public class Projeto {
+public class    Projeto {
 
     @Id
     @Column(name = "id")
@@ -67,4 +67,18 @@ public class Projeto {
         this.especificacoes.forEach(e -> e.setProjeto(this));
     }
 
+    @Override
+    public String toString() {
+        return "Projeto{" +
+                "id=" + id +
+                ", produto='" + produto + '\'' +
+                ", cliente='" + cliente + '\'' +
+                ", nomeProjeto='" + nomeProjeto + '\'' +
+                ", responsavel='" + responsavel + '\'' +
+                ", dataInicioProjeto=" + dataInicioProjeto +
+                ", dtCriacao=" + dtCriacao +
+                ", dtAtualizacao=" + dtAtualizacao +
+                ", especificacoes=" + especificacoes +
+                '}';
+    }
 }

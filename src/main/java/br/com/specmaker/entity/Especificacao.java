@@ -52,4 +52,14 @@ public class Especificacao {
             this.titulo = titulo.concat( uuid.toString() ).concat(".docx");
         }
     }
+
+    @Override
+    public String toString() {
+        return "Especificacao{" +
+                "id=" + id +
+                ", titulo='" + titulo + '\'' +
+                ", urlArquivo='" + urlArquivo + '\'' +
+                ", queryId='" + queryId + '\'' +
+                '}';
+    }
 }

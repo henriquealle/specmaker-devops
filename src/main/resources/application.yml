@@ -27,3 +27,6 @@ aws:
     secretKey: ${AWS_S3_SECRET_KEY:0M9nl7SxEMWzvyB4uX5RNuqr0bm96e2CD/jRtRDx}
     bucketName: ${AWS_S3_BUCKET_NAME:specmaker}
   region: ${AWS_REGION:us-west-2}
+
+auditoria:
+  folderName: ${AUDITORIA_FOLDER_NAME:~/auditoria/}

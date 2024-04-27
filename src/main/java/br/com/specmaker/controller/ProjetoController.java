@@ -69,9 +69,6 @@ public class ProjetoController {
     public ResponseEntity<ConsultaProjetoRecord> consultarPor(@PathVariable Long id) {
         logger.info("consultando projeto ", id);
         Projeto projeto = projetoService.buscarPorId(id);
-        if (projeto == null)
-            throw new ProjetoNotFoundException("Projeto não encontrado");
-
         return ResponseEntity.ok(new ConsultaProjetoRecord(projeto));
     }
 
