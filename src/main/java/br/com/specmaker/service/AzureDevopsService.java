@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
-public class QueryService {
+public class AzureDevopsService {
 
     @Autowired
     private RestQueryClient apiQueryClient;

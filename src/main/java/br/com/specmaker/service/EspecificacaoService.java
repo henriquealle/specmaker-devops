@@ -18,7 +18,7 @@ import java.io.File;
 public class EspecificacaoService {
 
     @Autowired
-    private QueryService queryService;
+    private AzureDevopsService azureDevopsService;
 
     @Autowired
     private AmazonS3Service s3Service;
@@ -34,7 +34,7 @@ public class EspecificacaoService {
             UUID uuid = UUID.randomUUID();
             String nomeProjeto = especificacao.getProjeto().getNomeProjeto();
             String nomeArquivo = especificacao.getTitulo().concat( uuid.toString() ).concat(".docx");
-            ByteArrayOutputStream stream = queryService.gerarArquivoWordEspecificacao(nomeProjeto, especificacao.getQueryId());
+            ByteArrayOutputStream stream = azureDevopsService.gerarArquivoWordEspecificacao(nomeProjeto, especificacao.getQueryId());
             File arquivoEspecificacao = ByteArrayOutputStreamToFile.createFileBy(nomeArquivo, stream);
 
             String urlArquivo = s3Service.uploadRepositorioAndGetUrl(arquivoEspecificacao);

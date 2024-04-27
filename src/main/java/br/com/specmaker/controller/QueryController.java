@@ -2,7 +2,7 @@ package br.com.specmaker.controller;
 
 import br.com.specmaker.entity.Query;
 import br.com.specmaker.service.AmazonS3Service;
-import br.com.specmaker.service.QueryService;
+import br.com.specmaker.service.AzureDevopsService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ import java.util.List;
 public class QueryController {
 
     @Autowired
-    private QueryService queryService;
+    private AzureDevopsService azureDevopsService;
 
     @Autowired
     private AmazonS3Service amazonS3Service;
@@ -33,14 +33,14 @@ public class QueryController {
 
     @GetMapping
     public List<Query> listQueries(){
-        return queryService.listarQueries();
+        return azureDevopsService.listarQueries();
     }
 
     @GetMapping("/{projectName}/{id}")
     public Query getQueryByID(
             @PathVariable(value = "projectName", required = true) String projectName,
             @PathVariable(value = "id", required = true) String id){
-        return queryService.getQueryByID(projectName, id);
+        return azureDevopsService.getQueryByID(projectName, id);
     }
 
     @GetMapping("/gerar-documento/{projectName}/{queryId}")
@@ -64,7 +64,7 @@ public class QueryController {
         header.setContentType(new MediaType("application", "force-download"));
         header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=especificacao.docx");
 
-        ByteArrayOutputStream arquivoByteArray = queryService.gerarArquivoWordEspecificacao(projectName, queryId);
+        ByteArrayOutputStream arquivoByteArray = azureDevopsService.gerarArquivoWordEspecificacao(projectName, queryId);
         ByteArrayResource arquivo = new ByteArrayResource( arquivoByteArray.toByteArray() );
         return new ResponseEntity<>(arquivo, header, HttpStatus.CREATED);
     }

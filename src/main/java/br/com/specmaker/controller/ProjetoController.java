@@ -43,7 +43,7 @@ public class ProjetoController {
     @PostMapping
     @Transactional
     public void cadastrar(@RequestBody @Valid CadastroProjetoRecord cadastroProjetoRecord) {
-        logger.info("gravando projeto ", cadastroProjetoRecord);
+        logger.info("gravando projeto {}", cadastroProjetoRecord);
         projetoService.cadastrar(new Projeto(cadastroProjetoRecord));
         logger.info("projeto cadastrado com sucesso");
     }
