@@ -23,10 +23,7 @@ public class ProjetoService {
     private ProjetoRepository projetoRepository;
 
     @Autowired
-    private QueryService queryService;
-
-    @Autowired
-    private AmazonS3Service s3Service;
+    private EspecificacaoService especificacaoService;
 
     private static final Logger logger = LogManager.getLogger(ProjetoService.class);
 
@@ -40,25 +37,11 @@ public class ProjetoService {
     }
 
     public void cadastrar(Projeto projeto) {
-         List<Especificacao> especs = projeto.getEspecificacoes();
-        if (especs != null){
-            especs.forEach(e -> {
-                try {
-                    String nomeProjeto = projeto.getNomeProjeto();
-                    String nomeArquivo = e.getTitulo().concat(".docx");
-                    ByteArrayOutputStream stream = queryService.obterArquivoEspecificacao(nomeProjeto, e.getQueryId());
-                    File arquivoEspecificacao = ByteArrayOutputStreamToFile.createFileBy(nomeArquivo, stream);
-
-                    s3Service.uploadFile(arquivoEspecificacao);
-
-                } catch (Exception ex) {
-                    logger.error(ex);
-                    throw new RuntimeException(ex);
-                }
-
-            });
-
-        }
+        List<Especificacao> especs = projeto.getEspecificacoes();
+        if (especs != null) especs.forEach( e -> {
+            String urlArquivo = especificacaoService.gerarArquivoEspecificacao(e);
+            e.setUrlArquivo(urlArquivo);
+        });
 
         projetoRepository.save(projeto);
     }

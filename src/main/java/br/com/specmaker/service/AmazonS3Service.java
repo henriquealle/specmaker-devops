@@ -2,10 +2,7 @@ package br.com.specmaker.service;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.amazonaws.services.s3.model.ListObjectsV2Request;
-import com.amazonaws.services.s3.model.ListObjectsV2Result;
-import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.amazonaws.services.s3.model.S3ObjectSummary;
+import com.amazonaws.services.s3.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -24,9 +21,15 @@ public class AmazonS3Service {
     private String bucketName;
 
 
+    public String uploadRepositorioAndGetUrl(File file){
+        uploadFile(file);
+        return amazonS3.getUrl(bucketName, file.getName()).toString();
+    }
+
     public void uploadFile(File file) {
         String fileName = file.getName();
-        amazonS3.putObject(new PutObjectRequest(bucketName, fileName, file));
+        amazonS3.putObject( new PutObjectRequest( bucketName, fileName, file)
+                .withCannedAcl( CannedAccessControlList.PublicRead ) );
     }
 
     public List<String> listFiles(){

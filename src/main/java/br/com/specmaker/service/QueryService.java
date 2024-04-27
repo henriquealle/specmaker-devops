@@ -37,7 +37,7 @@ public class QueryService {
         return new Query( apiQueryClient.getQueryById( projectName, id ) );
     }
 
-    public ByteArrayOutputStream obterArquivoEspecificacao(String projectName, String queryId)
+    public ByteArrayOutputStream gerarArquivoWordEspecificacao(String projectName, String queryId)
             throws Exception {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         XWPFDocument documentStream = gerarDocumento(projectName, queryId);

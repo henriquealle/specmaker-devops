@@ -5,9 +5,7 @@ import br.com.specmaker.service.AmazonS3Service;
 import br.com.specmaker.service.QueryService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -66,7 +64,7 @@ public class QueryController {
         header.setContentType(new MediaType("application", "force-download"));
         header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=especificacao.docx");
 
-        ByteArrayOutputStream arquivoByteArray = queryService.obterArquivoEspecificacao(projectName, queryId);
+        ByteArrayOutputStream arquivoByteArray = queryService.gerarArquivoWordEspecificacao(projectName, queryId);
         ByteArrayResource arquivo = new ByteArrayResource( arquivoByteArray.toByteArray() );
         return new ResponseEntity<>(arquivo, header, HttpStatus.CREATED);
     }
