@@ -10,6 +10,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.UUID;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -42,5 +44,12 @@ public class Especificacao {
         this.titulo = especificacaoRecord.titulo();
         this.urlArquivo = especificacaoRecord.urlArquivo();
         this.queryId = especificacaoRecord.queryId();
+    }
+
+    public void setTitulo(String titulo){
+        if( titulo != null && !titulo.isEmpty()){
+            UUID uuid = UUID.randomUUID();
+            this.titulo = titulo.concat( uuid.toString() ).concat(".docx");
+        }
     }
 }

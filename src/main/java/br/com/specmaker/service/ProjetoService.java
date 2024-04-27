@@ -5,15 +5,12 @@ import br.com.specmaker.entity.Especificacao;
 import br.com.specmaker.entity.Projeto;
 import br.com.specmaker.exceptions.ProjetoNotFoundException;
 import br.com.specmaker.repository.ProjetoRepository;
-import br.com.specmaker.utils.ByteArrayOutputStreamToFile;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.util.List;
 
 @Service
@@ -46,8 +43,10 @@ public class ProjetoService {
         projetoRepository.save(projeto);
     }
 
-    public void excluir(Long id) {
-        projetoRepository.deleteById(id);
+    public void excluir(Long projetoId) {
+        List<Especificacao> especs = especificacaoService.listarEspecificacoesPorProjeto(projetoId);
+        if(especs != null) especs.forEach(e -> especificacaoService.excluir( e ) );
+        projetoRepository.deleteById(projetoId);
     }
 
     public Projeto buscarPorId(Long id) {

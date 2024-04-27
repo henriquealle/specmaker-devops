@@ -48,4 +48,8 @@ public class AmazonS3Service {
         return nomeArquivos;
     }
 
+    public void deleteFile(String fileName) {
+        amazonS3.deleteObject(bucketName, fileName);
+    }
+
 }
