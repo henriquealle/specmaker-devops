@@ -32,7 +32,11 @@ public class EspecificacaoService {
             ByteArrayOutputStream stream = queryService.gerarArquivoWordEspecificacao(nomeProjeto, especificacao.getQueryId());
             File arquivoEspecificacao = ByteArrayOutputStreamToFile.createFileBy(nomeArquivo, stream);
 
-            return s3Service.uploadRepositorioAndGetUrl(arquivoEspecificacao);
+            String urlArquivo = s3Service.uploadRepositorioAndGetUrl(arquivoEspecificacao);
+
+            arquivoEspecificacao.delete();
+
+            return urlArquivo;
 
         } catch (Exception e) {
             logger.error(e);
