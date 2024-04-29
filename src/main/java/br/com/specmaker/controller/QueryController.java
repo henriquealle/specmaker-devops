@@ -1,10 +1,11 @@
 package br.com.specmaker.controller;
 
 import br.com.specmaker.entity.Query;
-import br.com.specmaker.service.QueryService;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import br.com.specmaker.service.AmazonS3Service;
+import br.com.specmaker.service.AzureDevopsService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -23,21 +24,23 @@ import java.util.List;
 public class QueryController {
 
     @Autowired
-    private QueryService queryService;
+    private AzureDevopsService azureDevopsService;
 
-    @Value("${azure.api.mainFolderId}")
-    private String mainFolder;
+    @Autowired
+    private AmazonS3Service amazonS3Service;
+
+    private static final Logger logger = LogManager.getLogger(QueryController.class);
 
     @GetMapping
     public List<Query> listQueries(){
-        return queryService.listarQueries();
+        return azureDevopsService.listarQueries();
     }
 
     @GetMapping("/{projectName}/{id}")
     public Query getQueryByID(
             @PathVariable(value = "projectName", required = true) String projectName,
             @PathVariable(value = "id", required = true) String id){
-        return queryService.getQueryByID(projectName, id);
+        return azureDevopsService.getQueryByID(projectName, id);
     }
 
     @GetMapping("/gerar-documento/{projectName}/{queryId}")
@@ -46,19 +49,23 @@ public class QueryController {
             @PathVariable(value = "queryId", required = true) String queryId )
             throws Exception {
 
-        try {
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            XWPFDocument documentStream = queryService.gerarDocumento(projectName, queryId);
-            HttpHeaders header = new HttpHeaders();
-            header.setContentType(new MediaType("application", "force-download"));
-            header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=especificacao.docx");
-            documentStream.write(stream);
-            documentStream.close();
-            return new ResponseEntity<>(new ByteArrayResource(stream.toByteArray()),
-                    header, HttpStatus.CREATED);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        logger.info("gerando arquivo para a query: ".concat(queryId));
+        return gerarArquivoEspecificacao(projectName, queryId);
+
+    }
+
+    @GetMapping("/arquivos/listar")
+    public List<String> listarArquivosS3(){
+        return amazonS3Service.listFiles();
+    }
+
+    private ResponseEntity<ByteArrayResource> gerarArquivoEspecificacao(String projectName, String queryId) throws Exception {
+        HttpHeaders header = new HttpHeaders();
+        header.setContentType(new MediaType("application", "force-download"));
+        header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=especificacao.docx");
+
+        ByteArrayOutputStream arquivoByteArray = azureDevopsService.gerarArquivoWordEspecificacao(projectName, queryId);
+        ByteArrayResource arquivo = new ByteArrayResource( arquivoByteArray.toByteArray() );
+        return new ResponseEntity<>(arquivo, header, HttpStatus.CREATED);
     }
 }
