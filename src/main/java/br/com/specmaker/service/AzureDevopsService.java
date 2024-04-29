@@ -7,12 +7,13 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 @Service
-public class QueryService {
+public class AzureDevopsService {
 
     @Autowired
     private RestQueryClient apiQueryClient;
@@ -22,6 +23,9 @@ public class QueryService {
 
     @Autowired
     private EspecificacaoWordCreator docCreator;
+
+    @Autowired
+    private AmazonS3Service amazonS3Service;
 
 
 
@@ -33,8 +37,16 @@ public class QueryService {
         return new Query( apiQueryClient.getQueryById( projectName, id ) );
     }
 
+    public ByteArrayOutputStream gerarArquivoWordEspecificacao(String projectName, String queryId)
+            throws Exception {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        XWPFDocument documentStream = gerarDocumento(projectName, queryId);
+        documentStream.write(stream);
+        documentStream.close();
+        return stream;
+    }
 
-    public XWPFDocument gerarDocumento(String projectName, String queryId)
+    private XWPFDocument gerarDocumento(String projectName, String queryId)
             throws Exception {
 
         Query devopQuery = getQueryByID(projectName, queryId);

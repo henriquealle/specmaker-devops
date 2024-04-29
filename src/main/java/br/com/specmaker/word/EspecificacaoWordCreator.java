@@ -109,17 +109,17 @@ public class EspecificacaoWordCreator {
         linha.getCell(0).setText("Projeto");
         linha.addNewTableCell().setText("[Informar o Nome do Projeto]");
         linha.addNewTableCell().setText("Analista responsável");
-        linha.addNewTableCell().setText("[Informar o nome e e-mail Analista responsável]");
+        linha.addNewTableCell().setText("[Informar o nome e e-mail do responsável]");
 
         linha = tabela.createRow();
         linha.getCell(0).setText("Data da solicitação");
         linha.getCell(1).setText(
                 LocalDateTime.now().format( DateTimeFormatter.ofPattern("dd/MM/uuuu") ) );
-        linha.getCell(2).setText("Pedido (uso do Sesc)");
+        linha.getCell(2).setText("Pedido");
         linha.getCell(3).setText("");
 
         linha = tabela.createRow();
-        linha.getCell(0).setText("Gerência / Unidade Solicitante");
+        linha.getCell(0).setText("Área Solicitante");
         linha.getCell(1).setText( "" );
         linha.getCell(2).setText("Contato");
         linha.getCell(3).setText("");
