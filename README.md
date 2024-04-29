@@ -11,6 +11,14 @@ Esse projeto tem como objetivo a geração de arquivos ".docx" concentrando docu
 
 `docker pull henriquealle/specmaker:{tag}`
 
+## Diagramas
+
+[diagrama de sequência fluxo de cadastro de projeto e geração de arquivo](https://drive.google.com/file/d/1shpBywoFNjILWZyreorw9lIspLK9flC5/view?usp=sharing)
+
+[diagrama de solução AWS](https://drive.google.com/file/d/1suLsfd0dejxweVO0nlnCjDst0ZbZBHJZ/view?usp=sharing)
+
+
+
 # Variáveis de Ambiente
 
 Este projeto utiliza variáveis de ambiente para configurar diferentes aspectos do sistema. As variáveis de ambiente são utilizadas para tornar a configuração mais flexível e segura, permitindo a configuração de valores sensíveis fora do código-fonte.
