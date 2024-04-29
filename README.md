@@ -13,11 +13,12 @@ Esse projeto tem como objetivo a geração de arquivos ".docx" concentrando docu
 
 ## Diagramas
 
-[diagrama de sequência fluxo de cadastro de projeto e geração de arquivo](https://drive.google.com/file/d/1shpBywoFNjILWZyreorw9lIspLK9flC5/view?usp=sharing)
+[Diagrama de sequência fluxo de cadastro de projeto e geração de arquivo](https://drive.google.com/file/d/1shpBywoFNjILWZyreorw9lIspLK9flC5/view?usp=sharing)
 
-[diagrama de solução AWS](https://drive.google.com/file/d/1suLsfd0dejxweVO0nlnCjDst0ZbZBHJZ/view?usp=sharing)
+[Diagrama de solução AWS](https://drive.google.com/file/d/1suLsfd0dejxweVO0nlnCjDst0ZbZBHJZ/view?usp=sharing)
 
-
+## Swagger UI
+`{BASR_URL}/swagger-ui/index.html`
 
 # Variáveis de Ambiente
 
