@@ -1,6 +1,6 @@
 azure:
   api:
-    token: ${AZURE_DEVOPS_TOKEN:p5nowls65penhmar47dlropr7mazdjkpaoopxigylgmcv2shzhyq}
+    token: ${AZURE_DEVOPS_TOKEN}
     mainFolderId: ${MAIN_QUERY_FOLDER:5f6919de-2cf1-41cd-907c-f801cb77f93f}
     repositorio: ${PROJETO_AZURE_DEVOPS:spec-maker}
     baseUrl: ${AZURE_DEVOPS_BASE_URL:https://dev.azure.com/henriquealle}
